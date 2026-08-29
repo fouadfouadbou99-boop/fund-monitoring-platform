@@ -6,24 +6,28 @@ from ai.prompts import PROMPT
 
 def analyze_document(document_text):
 
-    genai.configure(
-        api_key=st.secrets["GEMINI_API_KEY"]
-    )
+    try:
 
-    model = genai.GenerativeModel(
-        "gemini-flash-latest"
-    )
+        genai.configure(
+            api_key=st.secrets["GEMINI_API_KEY"]
+        )
 
-    prompt = f"""
+        model = genai.GenerativeModel(
+            "models/gemini-2.5-flash"
+        )
+
+        prompt = f"""
 {PROMPT}
 
 DOCUMENT :
 
-{document_text[:5000]}
+{document_text[:3000]}
 """
 
-    response = model.generate_content(
-        prompt
-    )
+        response = model.generate_content(prompt)
 
-    return response.text
+        return response.text
+
+    except Exception as e:
+
+        return f"ERREUR GEMINI : {str(e)}"
