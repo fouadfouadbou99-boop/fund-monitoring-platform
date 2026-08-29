@@ -1,3 +1,4 @@
+import json
 import streamlit as st
 import google.generativeai as genai
 
@@ -19,9 +20,18 @@ def analyze_document(document_text):
 
 DOCUMENT :
 
-{document_text[:3000]}
+{document_text[:5000]}
 """
 
     response = model.generate_content(prompt)
 
-    return response.text
+    response_text = response.text
+
+    response_text = (
+        response_text
+        .replace("```json", "")
+        .replace("```", "")
+        .strip()
+    )
+
+    return json.loads(response_text)
