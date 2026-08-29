@@ -12,52 +12,41 @@ Extraire les informations du document et produire un JSON strictement conforme a
 
 Règles :
 
-- Ne jamais inventer d'information.
-- Toute valeur absente doit être null.
-- Les pourcentages doivent être numériques.
-- Les montants doivent être restitués sans séparateurs.
-- Ne retourner que du JSON.
+- Ne jamais inventer.
+- Valeur absente = null.
+- Pourcentage sous forme numérique.
+- Montants sans séparateurs.
+- Pas de texte hors JSON.
 
 Identifier notamment :
 
-1. Informations générales :
-   - nom du fonds
-   - date du document
-   - gestionnaire
-   - investisseurs
+1. Informations générales
 
-2. Performance :
-   - TRI
-   - TVPI
-   - DPI
-   - RVPI
-   - MOIC
+2. Performance
+- TRI
+- TVPI
+- DPI
+- RVPI
+- MOIC
 
-3. Investissements :
-   - société
-   - secteur
-   - montant
-   - date
+3. Investissements
 
 4. Désinvestissements
 
 5. Participations
 
-6. Gouvernance :
-   - comité d'investissement
-   - participants
-   - décisions
+6. Gouvernance
 
 7. Risques
 
 8. Alertes
 
-9. OPCI :
-   - valeur d'expertise
-   - taux d'occupation
-   - loyers
-   - vacance locative
-   - endettement
+9. OPCI
+- Valeur expertise
+- Taux occupation
+- Loyers
+- Vacance locative
+- Endettement
 
-Retourne uniquement un JSON valide.
+Retourner uniquement un JSON valide.
 """
