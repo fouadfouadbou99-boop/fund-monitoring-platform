@@ -56,3 +56,57 @@ if uploaded_file is not None:
     with st.expander(
         "Aperçu du texte extrait"
     ):
+
+        st.text_area(
+            "Contenu",
+            text[:5000],
+            height=300
+        )
+
+    with st.spinner(
+        "Analyse IA en cours..."
+    ):
+
+        result = analyze_document(
+            text
+        )
+
+    st.success(
+        "Analyse terminée"
+    )
+
+    st.subheader(
+        "Résultat"
+    )
+
+    st.json(result)
+
+    if isinstance(result, dict):
+
+        if (
+            "alertes" in result
+            and result["alertes"]
+        ):
+
+            st.subheader(
+                "🚨 Alertes"
+            )
+
+            for alerte in result["alertes"]:
+
+                st.warning(
+                    str(alerte)
+                )
+
+        if (
+            "gouvernance" in result
+            and result["gouvernance"]
+        ):
+
+            st.subheader(
+                "👥 Gouvernance"
+            )
+
+            st.json(
+                result["gouvernance"]
+            )
