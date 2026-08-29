@@ -19,7 +19,7 @@ def analyze_document(document_text):
 
 DOCUMENT :
 
-{document_text[:50000]}
+{document_text[:30000]}
 """
 
     response = model.generate_content(
@@ -27,4 +27,3 @@ DOCUMENT :
     )
 
     return response.text
-``
