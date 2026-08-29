@@ -2,8 +2,9 @@ streamlit
 pandas
 plotly
 pdfplumber
-pymupdf
+PyMuPDF
 python-docx
 openai
 sqlalchemy
-python
+python-dotenv
+pydantic
