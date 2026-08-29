@@ -22,10 +22,12 @@ def analyze_document(document_text):
 
 DOCUMENT :
 
-{document_text[:3000]}
+{document_text[:5000]}
 """
 
-        response = model.generate_content(prompt)
+        response = model.generate_content(
+            prompt
+        )
 
         response_text = (
             response.text
@@ -34,7 +36,9 @@ DOCUMENT :
             .strip()
         )
 
-        return json.loads(response_text)
+        return json.loads(
+            response_text
+        )
 
     except Exception as e:
 
