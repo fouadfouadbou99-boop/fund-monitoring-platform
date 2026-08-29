@@ -11,7 +11,7 @@ def analyze_document(document_text):
     )
 
     model = genai.GenerativeModel(
-        "gemini-1.5-pro"
+        "gemini-pro"
     )
 
     prompt = f"""
