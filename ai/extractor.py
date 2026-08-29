@@ -6,26 +6,35 @@ from ai.prompts import PROMPT
 
 def analyze_document(document_text):
 
-    client = OpenAI(
-        api_key=st.secrets["OPENAI_API_KEY"]
-    )
+    try:
 
-    response = client.chat.completions.create(
+        client = OpenAI(
+            api_key=st.secrets["OPENAI_API_KEY"]
+        )
 
-        model="gpt-4o-mini",
+        response = client.chat.completions.create(
 
-        temperature=0,
+            model="gpt-4o-mini",
 
-        messages=[
-            {
-                "role": "system",
-                "content": PROMPT
-            },
-            {
-                "role": "user",
-                "content": document_text[:30000]
-            }
-        ]
-    )
+            temperature=0,
 
-    return response.choices[0].message.content
+            messages=[
+                {
+                    "role": "system",
+                    "content": PROMPT
+                },
+                {
+                    "role": "user",
+                    "content": document_text[:30000]
+                }
+            ]
+
+        )
+
+        return response.choices[0].message.content
+
+    except Exception as e:
+
+        raise Exception(
+            f"Erreur OpenAI : {str(e)}"
+        )
