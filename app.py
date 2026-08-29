@@ -4,13 +4,14 @@ from extraction.pdf_reader import extract_text_from_pdf
 from extraction.docx_reader import extract_text_from_docx
 from ai.extractor import analyze_document
 
+
 st.set_page_config(
-    page_title="Suivi Fonds PE & OPCI",
+    page_title="Suivi Fonds PE et OPCI",
     page_icon="📊",
     layout="wide"
 )
 
-st.title("📊 Suivi Fonds PE & OPCI")
+st.title("📊 Suivi des fonds PE et OPCI")
 
 st.write(
     "GEMINI_API_KEY configurée :",
@@ -24,26 +25,37 @@ uploaded_file = st.file_uploader(
 
 if uploaded_file is not None:
 
-    st.info(f"Document chargé : {uploaded_file.name}")
+    st.info(
+        f"Document chargé : {uploaded_file.name}"
+    )
 
     if uploaded_file.name.lower().endswith(".pdf"):
 
-        text = extract_text_from_pdf(uploaded_file)
+        text = extract_text_from_pdf(
+            uploaded_file
+        )
 
     elif uploaded_file.name.lower().endswith(".docx"):
 
-        text = extract_text_from_docx(uploaded_file)
+        text = extract_text_from_docx(
+            uploaded_file
+        )
 
     else:
 
-        st.error("Format non supporté")
+        st.error(
+            "Format non supporté"
+        )
+
         st.stop()
 
     st.success(
         f"Texte extrait : {len(text)} caractères"
     )
 
-    with st.expander("Aperçu du texte extrait"):
+    with st.expander(
+        "Aperçu du texte extrait"
+    ):
 
         st.text_area(
             "Contenu",
@@ -51,12 +63,20 @@ if uploaded_file is not None:
             height=300
         )
 
-    with st.spinner("Analyse IA en cours..."):
+    with st.spinner(
+        "Analyse IA en cours..."
+    ):
 
-        result = analyze_document(text)
+        result = analyze_document(
+            text
+        )
 
-    st.success("Analyse terminée")
+    st.success(
+        "Analyse terminée"
+    )
 
-    st.subheader("Résultat")
+    st.subheader(
+        "Résultat"
+    )
 
-    st.write(result)
+    st.json(result)
