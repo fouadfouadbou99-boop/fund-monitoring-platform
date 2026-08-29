@@ -3,38 +3,38 @@ import json
 import streamlit as st
 
 from extraction.pdf_reader import extract_text_from_pdf
-
 from extraction.docx_reader import extract_text_from_docx
-
 from ai.extractor import analyze_document
 
 st.set_page_config(
-
-    page_title="Fund Monitoring",
-
+    page_title="Suivi Fonds PE & OPCI",
     layout="wide"
-
 )
 
-st.title("📊 Monitoring Fonds PE & OPCI")
+st.title("📊 Suivi Fonds PE & OPCI")
+
+st.write(
+    "OPENAI_API_KEY configurée :",
+    "OPENAI_API_KEY" in st.secrets
+)
 
 uploaded_file = st.file_uploader(
-
     "Déposer un reporting",
-
     type=["pdf", "docx"]
-
 )
 
 if uploaded_file:
 
+    st.info(f"Document chargé : {uploaded_file.name}")
+
     if uploaded_file.name.endswith(".pdf"):
-
         text = extract_text_from_pdf(uploaded_file)
-
     else:
-
         text = extract_text_from_docx(uploaded_file)
+
+    st.success(
+        f"Texte extrait : {len(text)} caractères"
+    )
 
     with st.spinner("Analyse IA en cours..."):
 
@@ -44,10 +44,10 @@ if uploaded_file:
 
     try:
 
-        parsed = json.loads(result)
+        data = json.loads(result)
 
-        st.json(parsed)
+        st.json(data)
 
-    except:
+    except Exception:
 
-        st.write(result)
+        st.code(result)
