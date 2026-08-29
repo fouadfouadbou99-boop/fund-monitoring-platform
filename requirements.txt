@@ -6,4 +6,4 @@ pymupdf
 python-docx
 openai
 sqlalchemy
-python-dotenv
+python
