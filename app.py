@@ -1,53 +1,15 @@
-import json
-
 import streamlit as st
+import google.generativeai as genai
 
-from extraction.pdf_reader import extract_text_from_pdf
-from extraction.docx_reader import extract_text_from_docx
-from ai.extractor import analyze_document
+st.title("Modèles Gemini disponibles")
 
-st.set_page_config(
-    page_title="Suivi Fonds PE & OPCI",
-    layout="wide"
+genai.configure(
+    api_key=st.secrets["GEMINI_API_KEY"]
 )
 
-st.title("📊 Suivi Fonds PE & OPCI")
+try:
+    for model in genai.list_models():
+        st.write(model.name)
 
-st.write(
-    "OPENAI_API_KEY configurée :",
-    "OPENAI_API_KEY" in st.secrets
-)
-
-uploaded_file = st.file_uploader(
-    "Déposer un reporting",
-    type=["pdf", "docx"]
-)
-
-if uploaded_file:
-
-    st.info(f"Document chargé : {uploaded_file.name}")
-
-    if uploaded_file.name.endswith(".pdf"):
-        text = extract_text_from_pdf(uploaded_file)
-    else:
-        text = extract_text_from_docx(uploaded_file)
-
-    st.success(
-        f"Texte extrait : {len(text)} caractères"
-    )
-
-    with st.spinner("Analyse IA en cours..."):
-
-        result = analyze_document(text)
-
-    st.success("Analyse terminée")
-
-    try:
-
-        data = json.loads(result)
-
-        st.json(data)
-
-    except Exception:
-
-        st.code(result)
+except Exception as e:
+    st.error(str(e))
