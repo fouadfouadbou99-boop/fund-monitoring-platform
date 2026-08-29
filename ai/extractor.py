@@ -1,13 +1,15 @@
 import os
 
+from dotenv import load_dotenv
 from openai import OpenAI
 
 from ai.prompts import PROMPT
 
+load_dotenv()
+
 client = OpenAI(
     api_key=os.getenv("OPENAI_API_KEY")
 )
-
 
 def analyze_document(document_text):
 
