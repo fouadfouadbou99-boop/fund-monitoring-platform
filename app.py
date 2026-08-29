@@ -1,15 +1,62 @@
 import streamlit as st
-import google.generativeai as genai
 
-st.title("Modèles Gemini disponibles")
+from extraction.pdf_reader import extract_text_from_pdf
+from extraction.docx_reader import extract_text_from_docx
+from ai.extractor import analyze_document
 
-genai.configure(
-    api_key=st.secrets["GEMINI_API_KEY"]
+st.set_page_config(
+    page_title="Suivi Fonds PE & OPCI",
+    page_icon="📊",
+    layout="wide"
 )
 
-try:
-    for model in genai.list_models():
-        st.write(model.name)
+st.title("📊 Suivi Fonds PE & OPCI")
 
-except Exception as e:
-    st.error(str(e))
+st.write(
+    "GEMINI_API_KEY configurée :",
+    "GEMINI_API_KEY" in st.secrets
+)
+
+uploaded_file = st.file_uploader(
+    "Déposer un reporting",
+    type=["pdf", "docx"]
+)
+
+if uploaded_file is not None:
+
+    st.info(f"Document chargé : {uploaded_file.name}")
+
+    if uploaded_file.name.lower().endswith(".pdf"):
+
+        text = extract_text_from_pdf(uploaded_file)
+
+    elif uploaded_file.name.lower().endswith(".docx"):
+
+        text = extract_text_from_docx(uploaded_file)
+
+    else:
+
+        st.error("Format non supporté")
+        st.stop()
+
+    st.success(
+        f"Texte extrait : {len(text)} caractères"
+    )
+
+    with st.expander("Aperçu du texte extrait"):
+
+        st.text_area(
+            "Contenu",
+            text[:5000],
+            height=300
+        )
+
+    with st.spinner("Analyse IA en cours..."):
+
+        result = analyze_document(text)
+
+    st.success("Analyse terminée")
+
+    st.subheader("Résultat")
+
+    st.write(result)
