@@ -1,5 +1,4 @@
 import streamlit as st
-
 from openai import OpenAI
 
 from ai.prompts import PROMPT
@@ -7,21 +6,15 @@ from ai.prompts import PROMPT
 
 def analyze_document(document_text):
 
-    key = st.secrets["OPENAI_API_KEY"]
-
-    if not key.startswith("sk-"):
-
-        raise Exception(
-            f"Clé API invalide : {key[:10]}"
-        )
-
     client = OpenAI(
-        api_key=key
+        api_key=st.secrets["OPENAI_API_KEY"]
     )
 
     response = client.chat.completions.create(
 
-        model="gpt-4o",
+        model="gpt-4o-mini",
+
+        temperature=0,
 
         messages=[
             {
@@ -30,10 +23,9 @@ def analyze_document(document_text):
             },
             {
                 "role": "user",
-                "content": document_text[:5000]
+                "content": document_text[:30000]
             }
         ]
-
     )
 
     return response.choices[0].message.content
