@@ -1,40 +1,27 @@
 import streamlit as st
-from openai import OpenAI
+import google.generativeai as genai
 
 from ai.prompts import PROMPT
 
 
 def analyze_document(document_text):
 
-    try:
+    genai.configure(
+        api_key=st.secrets["GEMINI_API_KEY"]
+    )
 
-        client = OpenAI(
-            api_key=st.secrets["OPENAI_API_KEY"]
-        )
+    model = genai.GenerativeModel(
+        "gemini-2.5-flash"
+    )
 
-        response = client.chat.completions.create(
+    prompt = f"""
+{PROMPT}
 
-            model="gpt-4o-mini",
+DOCUMENT :
 
-            temperature=0,
+{document_text[:50000]}
+"""
 
-            messages=[
-                {
-                    "role": "system",
-                    "content": PROMPT
-                },
-                {
-                    "role": "user",
-                    "content": document_text[:30000]
-                }
-            ]
+    response = model.generate_content(prompt)
 
-        )
-
-        return response.choices[0].message.content
-
-    except Exception as e:
-
-        raise Exception(
-            f"Erreur OpenAI : {str(e)}"
-        )
+    return response.text
