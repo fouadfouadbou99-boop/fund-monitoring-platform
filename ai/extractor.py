@@ -22,9 +22,6 @@ DOCUMENT :
 {document_text[:30000]}
 """
 
-    response = model.generate_content(
-        prompt
-    )
+    response = model.generate_content(prompt)
 
     return response.text
-``
