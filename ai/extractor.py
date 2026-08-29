@@ -11,7 +11,7 @@ def analyze_document(document_text):
     )
 
     model = genai.GenerativeModel(
-        "gemini-2.5-flash"
+        "gemini-3.6-flash"
     )
 
     prompt = f"""
@@ -22,6 +22,9 @@ DOCUMENT :
 {document_text[:50000]}
 """
 
-    response = model.generate_content(prompt)
+    response = model.generate_content(
+        prompt
+    )
 
     return response.text
+``
