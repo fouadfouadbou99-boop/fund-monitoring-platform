@@ -7,31 +7,37 @@ from ai.prompts import PROMPT
 
 def analyze_document(document_text):
 
-    genai.configure(
-        api_key=st.secrets["GEMINI_API_KEY"]
-    )
+    try:
 
-    model = genai.GenerativeModel(
-        "models/gemini-3.6-flash"
-    )
+        genai.configure(
+            api_key=st.secrets["GEMINI_API_KEY"]
+        )
 
-    prompt = f"""
+        model = genai.GenerativeModel(
+            "models/gemini-3.6-flash"
+        )
+
+        prompt = f"""
 {PROMPT}
 
 DOCUMENT :
 
-{document_text[:5000]}
+{document_text[:3000]}
 """
 
-    response = model.generate_content(prompt)
+        response = model.generate_content(prompt)
 
-    response_text = response.text
+        response_text = (
+            response.text
+            .replace("```json", "")
+            .replace("```", "")
+            .strip()
+        )
 
-    response_text = (
-        response_text
-        .replace("```json", "")
-        .replace("```", "")
-        .strip()
-    )
+        return json.loads(response_text)
 
-    return json.loads(response_text)
+    except Exception as e:
+
+        return {
+            "erreur": str(e)
+        }
