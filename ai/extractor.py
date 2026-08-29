@@ -7,30 +7,22 @@ from ai.prompts import PROMPT
 
 def analyze_document(document_text):
 
-    if "OPENAI_API_KEY" not in st.secrets:
+    key = st.secrets["OPENAI_API_KEY"]
+
+    if not key.startswith("sk-"):
 
         raise Exception(
-            """
-            La clé OPENAI_API_KEY n'est pas configurée.
-
-            Ouvrez :
-            Manage App
-            → Settings
-            → Secrets
-
-            Puis ajoutez :
-
-            OPENAI_API_KEY="votre_cle_openai"
-            """
+            f"Clé API invalide : {key[:10]}"
         )
 
     client = OpenAI(
-        api_key=st.secrets["OPENAI_API_KEY"]
+        api_key=key
     )
 
     response = client.chat.completions.create(
+
         model="gpt-4o",
-        temperature=0,
+
         messages=[
             {
                 "role": "system",
@@ -38,9 +30,10 @@ def analyze_document(document_text):
             },
             {
                 "role": "user",
-                "content": document_text
+                "content": document_text[:5000]
             }
         ]
+
     )
 
     return response.choices[0].message.content
