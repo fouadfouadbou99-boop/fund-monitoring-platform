@@ -2,119 +2,57 @@ import streamlit as st
 
 from extraction.pdf_reader import extract_text_from_pdf
 from extraction.docx_reader import extract_text_from_docx
-
 from ai.extractor import analyze_document
 
-from database import (
-    init_db,
-    save_analysis
-)
-
-
-init_db()
 
 st.set_page_config(
-    page_title="Suivi Fonds PE & OPCI",
+    page_title="Suivi Fonds PE et OPCI",
     page_icon="📊",
     layout="wide"
 )
 
-st.title(
-    "📊 Suivi Fonds PE & OPCI"
+st.title("📊 Suivi des Fonds PE et OPCI")
+
+st.write(
+    "GEMINI_API_KEY configurée :",
+    "GEMINI_API_KEY" in st.secrets
 )
 
 uploaded_file = st.file_uploader(
     "Déposer un reporting",
-    type=[
-        "pdf",
-        "docx"
-    ]
+    type=["pdf", "docx"]
 )
 
-if uploaded_file:
+if uploaded_file is not None:
 
     st.info(
-        f"Document : {uploaded_file.name}"
+        f"Document chargé : {uploaded_file.name}"
     )
 
-    if uploaded_file.name.lower().endswith(
-        ".pdf"
-    ):
+    if uploaded_file.name.lower().endswith(".pdf"):
 
         text = extract_text_from_pdf(
             uploaded_file
         )
 
-    else:
+    elif uploaded_file.name.lower().endswith(".docx"):
 
         text = extract_text_from_docx(
             uploaded_file
         )
 
+    else:
+
+        st.error(
+            "Format non supporté"
+        )
+
+        st.stop()
+
     st.success(
         f"Texte extrait : {len(text)} caractères"
     )
 
-    with st.spinner(
-        "Analyse IA en cours..."
+    with st.expander(
+        "Aperçu du texte extrait"
     ):
-
-        result = analyze_document(
-            text
-        )
-
-    st.success(
-        "Analyse terminée"
-    )
-
-    st.subheader(
-        "JSON extrait"
-    )
-
-    st.json(result)
-
-    if "alertes" in result:
-
-        if result["alertes"]:
-
-            st.subheader(
-                "🚨 Alertes"
-            )
-
-            for alerte in result["alertes"]:
-
-                st.warning(
-                    str(alerte)
-                )
-
-    if "gouvernance" in result:
-
-        st.subheader(
-            "👥 Gouvernance"
-        )
-
-        st.json(
-            result["gouvernance"]
-        )
-
-    projet = (
-        result
-        .get(
-            "informations_generales",
-            {}
-        )
-        .get(
-            "nom_projet",
-            "Inconnu"
-        )
-    )
-
-    save_analysis(
-        uploaded_file.name,
-        projet,
-        result
-    )
-
-    st.success(
-        "Analyse enregistrée dans la base."
-    )
