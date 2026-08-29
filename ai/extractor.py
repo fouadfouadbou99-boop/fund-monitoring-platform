@@ -1,17 +1,15 @@
-import os
+import streamlit as st
 
-from dotenv import load_dotenv
 from openai import OpenAI
 
 from ai.prompts import PROMPT
 
-load_dotenv()
-
-client = OpenAI(
-    api_key=os.getenv("OPENAI_API_KEY")
-)
 
 def analyze_document(document_text):
+
+    client = OpenAI(
+        api_key=st.secrets["OPENAI_API_KEY"]
+    )
 
     response = client.chat.completions.create(
 
